@@ -789,6 +789,8 @@ function idle(){
                   CappingflagStopped = true
                   CappingflagRunning = false
                   CappingflagPrint = 1
+                  if ( ! CappingStatus )
+                    Cappingstate = 3
                 }
               }
               Cappingactual = Cappingct
