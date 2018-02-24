@@ -167,9 +167,9 @@ var CanPrintct = null,
     PackingtimeStop = 60, //NOTE: Timestop
     PackingWorktime = 0.99, //NOTE: Intervalo de tiempo en minutos para actualizar el log
     PackingflagRunning = false
-var CheckWeighterWaste=0,secCheckWeighter=0;
+var CheckWeighterWaste=0,secCheckWeighter=Date.now();
 
-var eol=0,secEOL=0;
+var eol=0,secEOL=Date.now();
 
 var cA1, cA2, cA3;
 
@@ -899,23 +899,19 @@ function idle(){
               }
         //------------------------------------------Packing----------------------------------------------
                  //////----------------------------------------------------------------------------------------------------------------------
-              if(secCheckWeighter>=60){
+              if(secCheckWeighter < Date.now() - 60000){
                 fs.appendFileSync("C:/Pulse/AERO9_LOGS/arg_tor_CheckWeighter_AERO9.log","tt="+Date.now()+",var=CPQR"+",val="+CheckWeighterWaste+"\n");
 
-                secCheckWeighter=0;
-              }else{
-                secCheckWeighter++;
+                secCheckWeighter= Date.now();
               }
               //////--EOL--------------------------------------------------------------------------------------------------------------------
 
 
                  //////--EOL--------------------------------------------------------------------------------------------------------------------
-              if(secEOL>=60){
+              if(secEOL < Date.now() - 60000){
                 fs.appendFileSync("C:/Pulse/AERO9_LOGS/arg_tor_EOL_AERO9.log","tt="+Date.now()+",var=EOL"+",val="+eol+"\n");
 
-                secEOL=0;
-              }else{
-                secEOL++;
+                secEOL=Date.now();
               }
               //////--EOL--------------------------------------------------------------------------------
 
