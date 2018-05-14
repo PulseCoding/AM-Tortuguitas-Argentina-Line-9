@@ -255,72 +255,72 @@ function idle(){
               ValvsMachineStatus = resp.coils[2]
             });
             client1.readHoldingRegisters(0, 16).then(function(resp) {
-                CntInCanPrint = joinWord(resp.register[0], resp.register[1]);
+                CntOutBathTest = joinWord(resp.register[0], resp.register[1]);
                 CntOutFilling = joinWord(resp.register[2], resp.register[3]);
                 CntOutValvsMachine = joinWord(resp.register[6], resp.register[7]);
                 CntOutCrimper = joinWord(resp.register[8], resp.register[9]);
                 CntOutGassing = joinWord(resp.register[10], resp.register[11]);
                 CntOutLevelChecker = joinWord(resp.register[12], resp.register[13]);
             });
-        //------------------------------------------CanPrint----------------------------------------------
-              CanPrintct = CntInCanPrint // NOTE: igualar al contador de salida
-              if (!CanPrintONS && CanPrintct) {
-                CanPrintspeedTemp = CanPrintct
-                CanPrintsec = Date.now()
-                CanPrintONS = true
-                CanPrinttime = Date.now()
-              }
-              if(CanPrintct > CanPrintactual){
-                if(CanPrintflagStopped){
-                  CanPrintspeed = CanPrintct - CanPrintspeedTemp
-                  CanPrintspeedTemp = CanPrintct
-                  CanPrintsec = Date.now()
-                  CanPrinttime = Date.now()
-                }
-                CanPrintsecStop = 0
-                CanPrintstate = 1
-                CanPrintflagStopped = false
-                CanPrintflagRunning = true
-              } else if( CanPrintct == CanPrintactual ){
-                if(CanPrintsecStop == 0){
-                  CanPrinttime = Date.now()
-                  CanPrintsecStop = Date.now()
-                }
-                if( ( Date.now() - ( CanPrinttimeStop * 1000 ) ) >= CanPrintsecStop ){
-                  CanPrintspeed = 0
-                  CanPrintstate = 2
-                  CanPrintspeedTemp = CanPrintct
-                  CanPrintflagStopped = true
-                  CanPrintflagRunning = false
-                  CanPrintflagPrint = 1
-                }
-              }
-              CanPrintactual = CanPrintct
-              if(Date.now() - 60000 * CanPrintWorktime >= CanPrintsec && CanPrintsecStop == 0){
-                if(CanPrintflagRunning && CanPrintct){
-                  CanPrintflagPrint = 1
-                  CanPrintsecStop = 0
-                  CanPrintspeed = CanPrintct - CanPrintspeedTemp
-                  CanPrintspeedTemp = CanPrintct
-                  CanPrintsec = Date.now()
-                }
-              }
-              CanPrintresults = {
-                ST: CanPrintstate,
-                CPQI: CntInCanPrint,
-                SP: CanPrintspeed
-              }
-              if (CanPrintflagPrint == 1) {
-                for (var key in CanPrintresults) {
-                  if( CanPrintresults[key] != null && ! isNaN(CanPrintresults[key]) )
-                  //NOTE: Cambiar path
-                  fs.appendFileSync('C:/Pulse/AERO9_LOGS/arg_tor_CanPrint_AERO9.log', 'tt=' + CanPrinttime + ',var=' + key + ',val=' + CanPrintresults[key] + '\n')
-                }
-                CanPrintflagPrint = 0
-                CanPrintsecStop = 0
-                CanPrinttime = Date.now()
-              }
-        //------------------------------------------CanPrint----------------------------------------------
+            //------------------------------------------BathTest----------------------------------------------
+                  BathTestct = CntOutBathTest // NOTE: igualar al contador de salida
+                  if (!BathTestONS && BathTestct) {
+                    BathTestspeedTemp = BathTestct
+                    BathTestsec = Date.now()
+                    BathTestONS = true
+                    BathTesttime = Date.now()
+                  }
+                  if(BathTestct > BathTestactual){
+                    if(BathTestflagStopped){
+                      BathTestspeed = BathTestct - BathTestspeedTemp
+                      BathTestspeedTemp = BathTestct
+                      BathTestsec = Date.now()
+                      BathTesttime = Date.now()
+                    }
+                    BathTestsecStop = 0
+                    BathTeststate = 1
+                    BathTestflagStopped = false
+                    BathTestflagRunning = true
+                  } else if( BathTestct == BathTestactual ){
+                    if(BathTestsecStop == 0){
+                      BathTesttime = Date.now()
+                      BathTestsecStop = Date.now()
+                    }
+                    if( ( Date.now() - ( BathTesttimeStop * 1000 ) ) >= BathTestsecStop ){
+                      BathTestspeed = 0
+                      BathTeststate = 2
+                      BathTestspeedTemp = BathTestct
+                      BathTestflagStopped = true
+                      BathTestflagRunning = false
+                      BathTestflagPrint = 1
+                    }
+                  }
+                  BathTestactual = BathTestct
+                  if(Date.now() - 60000 * BathTestWorktime >= BathTestsec && BathTestsecStop == 0){
+                    if(BathTestflagRunning && BathTestct){
+                      BathTestflagPrint = 1
+                      BathTestsecStop = 0
+                      BathTestspeed = BathTestct - BathTestspeedTemp
+                      BathTestspeedTemp = BathTestct
+                      BathTestsec = Date.now()
+                    }
+                  }
+                  BathTestresults = {
+                    ST: BathTeststate,
+                    CPQO: CntOutBathTest,
+                    SP: BathTestspeed
+                  }
+                  if (BathTestflagPrint == 1) {
+                    for (var key in BathTestresults) {
+                      if( BathTestresults[key] != null && ! isNaN(BathTestresults[key]) )
+                      //NOTE: Cambiar path
+                      fs.appendFileSync('C:/Pulse/AERO9_LOGS/arg_tor_BathTest_AERO9.log', 'tt=' + BathTesttime + ',var=' + key + ',val=' + BathTestresults[key] + '\n')
+                    }
+                    BathTestflagPrint = 0
+                    BathTestsecStop = 0
+                    BathTesttime = Date.now()
+                  }
+            //------------------------------------------BathTest----------------------------------------------
         //------------------------------------------Filling----------------------------------------------
               Fillingct = CntOutFilling // NOTE: igualar al contador de salida
               if (!FillingONS && Fillingct) {
@@ -633,71 +633,71 @@ function idle(){
                 CappingStatus = resp.coils[3]
               });
               client2.readHoldingRegisters(0, 16).then(function(resp) {
-                CntOutBathTest = joinWord(resp.register[0], resp.register[1]);
+                CntInCanPrint = joinWord(resp.register[0], resp.register[1]);
                 CntOutMicroLeack = joinWord(resp.register[2], resp.register[3]);
                 CntRejMicroLeack = joinWord(resp.register[4], resp.register[5]);
                 CntOutCapping = joinWord(resp.register[8], resp.register[9]);
                 CntRejCapping = joinWord(resp.register[10], resp.register[11]);
               });
-        //------------------------------------------BathTest----------------------------------------------
-              BathTestct = CntOutBathTest // NOTE: igualar al contador de salida
-              if (!BathTestONS && BathTestct) {
-                BathTestspeedTemp = BathTestct
-                BathTestsec = Date.now()
-                BathTestONS = true
-                BathTesttime = Date.now()
-              }
-              if(BathTestct > BathTestactual){
-                if(BathTestflagStopped){
-                  BathTestspeed = BathTestct - BathTestspeedTemp
-                  BathTestspeedTemp = BathTestct
-                  BathTestsec = Date.now()
-                  BathTesttime = Date.now()
-                }
-                BathTestsecStop = 0
-                BathTeststate = 1
-                BathTestflagStopped = false
-                BathTestflagRunning = true
-              } else if( BathTestct == BathTestactual ){
-                if(BathTestsecStop == 0){
-                  BathTesttime = Date.now()
-                  BathTestsecStop = Date.now()
-                }
-                if( ( Date.now() - ( BathTesttimeStop * 1000 ) ) >= BathTestsecStop ){
-                  BathTestspeed = 0
-                  BathTeststate = 2
-                  BathTestspeedTemp = BathTestct
-                  BathTestflagStopped = true
-                  BathTestflagRunning = false
-                  BathTestflagPrint = 1
-                }
-              }
-              BathTestactual = BathTestct
-              if(Date.now() - 60000 * BathTestWorktime >= BathTestsec && BathTestsecStop == 0){
-                if(BathTestflagRunning && BathTestct){
-                  BathTestflagPrint = 1
-                  BathTestsecStop = 0
-                  BathTestspeed = BathTestct - BathTestspeedTemp
-                  BathTestspeedTemp = BathTestct
-                  BathTestsec = Date.now()
-                }
-              }
-              BathTestresults = {
-                ST: BathTeststate,
-                CPQO: CntOutBathTest,
-                SP: BathTestspeed
-              }
-              if (BathTestflagPrint == 1) {
-                for (var key in BathTestresults) {
-                  if( BathTestresults[key] != null && ! isNaN(BathTestresults[key]) )
-                  //NOTE: Cambiar path
-                  fs.appendFileSync('C:/Pulse/AERO9_LOGS/arg_tor_BathTest_AERO9.log', 'tt=' + BathTesttime + ',var=' + key + ',val=' + BathTestresults[key] + '\n')
-                }
-                BathTestflagPrint = 0
-                BathTestsecStop = 0
-                BathTesttime = Date.now()
-              }
-        //------------------------------------------BathTest----------------------------------------------
+              //------------------------------------------CanPrint----------------------------------------------
+                    CanPrintct = CntInCanPrint // NOTE: igualar al contador de salida
+                    if (!CanPrintONS && CanPrintct) {
+                      CanPrintspeedTemp = CanPrintct
+                      CanPrintsec = Date.now()
+                      CanPrintONS = true
+                      CanPrinttime = Date.now()
+                    }
+                    if(CanPrintct > CanPrintactual){
+                      if(CanPrintflagStopped){
+                        CanPrintspeed = CanPrintct - CanPrintspeedTemp
+                        CanPrintspeedTemp = CanPrintct
+                        CanPrintsec = Date.now()
+                        CanPrinttime = Date.now()
+                      }
+                      CanPrintsecStop = 0
+                      CanPrintstate = 1
+                      CanPrintflagStopped = false
+                      CanPrintflagRunning = true
+                    } else if( CanPrintct == CanPrintactual ){
+                      if(CanPrintsecStop == 0){
+                        CanPrinttime = Date.now()
+                        CanPrintsecStop = Date.now()
+                      }
+                      if( ( Date.now() - ( CanPrinttimeStop * 1000 ) ) >= CanPrintsecStop ){
+                        CanPrintspeed = 0
+                        CanPrintstate = 2
+                        CanPrintspeedTemp = CanPrintct
+                        CanPrintflagStopped = true
+                        CanPrintflagRunning = false
+                        CanPrintflagPrint = 1
+                      }
+                    }
+                    CanPrintactual = CanPrintct
+                    if(Date.now() - 60000 * CanPrintWorktime >= CanPrintsec && CanPrintsecStop == 0){
+                      if(CanPrintflagRunning && CanPrintct){
+                        CanPrintflagPrint = 1
+                        CanPrintsecStop = 0
+                        CanPrintspeed = CanPrintct - CanPrintspeedTemp
+                        CanPrintspeedTemp = CanPrintct
+                        CanPrintsec = Date.now()
+                      }
+                    }
+                    CanPrintresults = {
+                      ST: CanPrintstate,
+                      CPQI: CntInCanPrint,
+                      SP: CanPrintspeed
+                    }
+                    if (CanPrintflagPrint == 1) {
+                      for (var key in CanPrintresults) {
+                        if( CanPrintresults[key] != null && ! isNaN(CanPrintresults[key]) )
+                        //NOTE: Cambiar path
+                        fs.appendFileSync('C:/Pulse/AERO9_LOGS/arg_tor_CanPrint_AERO9.log', 'tt=' + CanPrinttime + ',var=' + key + ',val=' + CanPrintresults[key] + '\n')
+                      }
+                      CanPrintflagPrint = 0
+                      CanPrintsecStop = 0
+                      CanPrinttime = Date.now()
+                    }
+              //------------------------------------------CanPrint----------------------------------------------
         //------------------------------------------MicroLeack----------------------------------------------
               MicroLeackct = CntOutMicroLeack // NOTE: igualar al contador de salida
               if (!MicroLeackONS && MicroLeackct) {
